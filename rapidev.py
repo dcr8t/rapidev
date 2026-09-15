@@ -70,14 +70,15 @@ def push():
 
 def keep_pulling():
   cmd = ["git","pull"]
-  fix_cmd = ["git","restore",".","&&","git","clean","-fd"]
+  fix_cmds = [["git","restore","."],["git","clean","-fd"]]
   while True:
     pull = run(cmd,show=True,codespace=True)
     if pull.get("code") != 0:
       print("[!]",RED("ERROR PULLING!"))
       print("[?]",YELLOW("Caused by untracked or uncommited files in Working directory..."))
       print("[*]",GREEN("FIXING"))
-      run(fix_cmd)
+      for fix_cmd in fix_cmds:
+        run(fix_cmd)
       print("[✔]",GREEN("FIXED!"))
       
     
