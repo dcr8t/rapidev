@@ -55,7 +55,7 @@ def push():
   update_counter()
   tries = 0
   while True:
-    commit_msg = json.loads(run(["termux-dialog","-t","'COMMIT MESSAGE'"])).get("text")
+    commit_msg = json.loads(run(["termux-dialog","-t","'COMMIT MESSAGE'"]).get("output")).get("text")
     is_commit = commit_msg.split()
     if is_commit:
       cmd1 = ["git","add","."]
@@ -116,6 +116,6 @@ try:
   with style.hidden_cursor():
     main()
 
-except:
+except KeyboardInterrupt:
   print("\r",CLEARLINE,BLUE("BYE! HAVE A GREAT DAY"))
   print("\033[?25h")
