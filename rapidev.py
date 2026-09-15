@@ -78,7 +78,7 @@ def keep_pulling():
       print("[?]",YELLOW("Caused by untracked or uncommited files in Working directory..."))
       print("[*]",GREEN("FIXING"))
       for fix_cmd in fix_cmds:
-        run(fix_cmd)
+        fixed = run(fix_cmd)
       print("[✔]",GREEN("FIXED!"))
       
     
