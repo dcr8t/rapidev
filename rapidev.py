@@ -60,7 +60,7 @@ def push():
     if is_commit:
       cmd1 = ["git","add","."]
       cmd2 = ["git","commit","-m",commit_msg]
-      cmd3 = ["git","push","-u","origin","main"]
+      cmd3 = ["git","push","-u","origin","main","-f"]
       cmd_sequence = [cmd1,cmd2,cmd3]
       for cmd in cmd_sequence:
         run(cmd)
