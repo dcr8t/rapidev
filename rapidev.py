@@ -21,6 +21,7 @@ def update_counter():
 def run(command,show=False,codespace=False):
   now = datetime.now().strftime("___%H:%M:%S   %d/%m/%Y")
   try:
+    print(YELLOW(command))
     process = subprocess.run(command,capture_output=True, text=True)
     result = process.stdout
     error = process.stderr
@@ -73,12 +74,13 @@ def keep_pulling():
   fix_cmds = [["git","restore","."],["git","clean","-fd"]]
   while True:
     pull = run(cmd,show=True,codespace=True)
-    if pull.get("code") != 0:
-      print("[!]",RED("ERROR PULLING!"))
+    status_code = pull.get("code")
+    if status_code != 0:
+      print("[!]",RED("ERROR PULLING!"),"Code:",status_code)
       print("[?]",YELLOW("Caused by untracked or uncommited files in Working directory..."))
       print("[*]",GREEN("FIXING"))
       for fix_cmd in fix_cmds:
-        fixed = run(fix_cmd)
+        run(fix_cmd)
       print("[✔]",GREEN("FIXED!"))
       
     
