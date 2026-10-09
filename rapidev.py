@@ -21,7 +21,6 @@ def update_counter():
 def run(command,show=False,codespace=False):
   now = datetime.now().strftime("___%H:%M:%S   %d/%m/%Y")
   try:
-    print(YELLOW(str(command)))
     process = subprocess.run(command,capture_output=True, text=True)
     result = process.stdout
     error = process.stderr
@@ -114,13 +113,11 @@ def main():
         push()
       else:
         wait()
-"""
-try:l
+
+try:
   with style.hidden_cursor():
     main()
 
 except KeyboardInterrupt:
   print("\r",CLEARLINE,BLUE("BYE! HAVE A GREAT DAY"))
   print("\033[?25h")
-"""
-keep_pulling()
