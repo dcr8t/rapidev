@@ -114,11 +114,13 @@ def main():
         push()
       else:
         wait()
-
-try:
+"""
+try:l
   with style.hidden_cursor():
     main()
 
 except KeyboardInterrupt:
   print("\r",CLEARLINE,BLUE("BYE! HAVE A GREAT DAY"))
   print("\033[?25h")
+"""
+keep_pulling()
