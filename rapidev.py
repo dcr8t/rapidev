@@ -21,7 +21,7 @@ def update_counter():
 def run(command,show=False,codespace=False):
   now = datetime.now().strftime("___%H:%M:%S   %d/%m/%Y")
   try:
-    print(YELLOW(command))
+    print(YELLOW(str(command)))
     process = subprocess.run(command,capture_output=True, text=True)
     result = process.stdout
     error = process.stderr
