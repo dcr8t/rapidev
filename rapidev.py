@@ -71,7 +71,7 @@ def push():
 
 def port_forward():
   port = 5173
-  print(CLEARLINE,GREEN(f"{spin[counter]} SETTING PORT {port} PUBLIC {spin[counter]}"), end="\r")
+  print(CLEARLINE,GREEN(f"{spin[counter]} SETTING PORT {port} PUBLIC {spin[counter]}"), end="\n\n")
   update_counter()
   
   command_sequence = [
