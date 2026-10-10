@@ -81,7 +81,8 @@ def port_forward():
   ]
   for cmd in command_sequence:
     run(cmd,codespace=True,show=True)
-  
+    print("\n",CLEARLINE,"=" * style.width)
+  print("\n\n")
   
 
 def keep_pulling():
