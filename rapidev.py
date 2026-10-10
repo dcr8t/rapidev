@@ -18,6 +18,7 @@ def update_counter():
   else:
     counter += 1
 
+
 def run(command,show=False,codespace=False):
   now = datetime.now().strftime("___%H:%M:%S   %d/%m/%Y")
   try:
@@ -68,6 +69,21 @@ def push():
     tries += 20
     wait(tries)
 
+def port_forward():
+  port = 5173
+  print(CLEARLINE,GREEN(f"{spin[counter]} SETTING PORT {port} PUBLIC {spin[counter]}"), end="\r")
+  update_counter()
+  
+  command_sequence = [
+    ["timeout", "2", "gh", "cs", "ports", "forward", f"{port}:{port}"],
+    ["gh", "cs", "ports", "forward", f"{port}:{port}&"],
+    ["gh", "cs", "ports", "visibility", f"{port}:public"]
+  ]
+  for cmd in command_sequence:
+    run(cmd,codespace=True,show=True)
+  
+  
+
 def keep_pulling():
   cmd = ["git","pull"]
   fix_cmds = [["git","restore","."],["git","clean","-fd"]]
@@ -81,8 +97,6 @@ def keep_pulling():
       for fix_cmd in fix_cmds:
         run(fix_cmd)
       print("[✔]",GREEN("FIXED!"))
-      
-    
     wait()
     
 def check_environment():
@@ -104,6 +118,7 @@ def main():
   is_codespace = check_environment()
   if is_codespace:
     animation("CODESPACE")
+    port_forward()
     keep_pulling()
   else:
     animation("LOCAL")    
