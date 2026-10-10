@@ -75,8 +75,8 @@ def port_forward():
   update_counter()
   
   command_sequence = [
-    ["timeout", "2", "gh", "cs", "ports", "forward", f"{port}:{port}"],
-    ["gh", "cs", "ports", "forward", f"{port}:{port}&"],
+    ["timeout", "2", "gh", "cs", "ports", "forward", f"{port}:{port}","-c",f"{'$CODESPACE_NAME'}"],
+    ["gh", "cs", "ports", "forward", f"{port}:{port}",f"{'$CODESPACE_NAME'}&"],
     ["gh", "cs", "ports", "visibility", f"{port}:public"]
   ]
   for cmd in command_sequence:
