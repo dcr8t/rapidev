@@ -18,6 +18,19 @@ def update_counter():
   else:
     counter += 1
 
+def start_in_clipboard():
+  cmd = ["termux-clipboard-get"]
+  reset_cmd = ["termux-clipboard-set",""]
+  result = run(cmd).get("output")
+  if ":start" in result:
+    run(reset_cmd)
+    return True
+  else:
+    return False
+
+def help_toast():
+  cmd = ["termux-toast","COPY 👉:start TO CLIPBOARD TO START RAPIDEV"]
+  run(cmd)
 
 def run(command,show=False,codespace=False):
   now = datetime.now().strftime("___%H:%M:%S   %d/%m/%Y")
@@ -54,9 +67,20 @@ def scan_for_changes():
 def push():
   print(CLEARLINE,GREEN(f"{spin[counter]} PUSHING TO GITHUB {spin[counter]}"), end="\r")
   update_counter()
-  tries = 0
+  timer = 0
   while True:
-    commit_msg = json.loads(run(["termux-dialog","-t","'COMMIT MESSAGE'"]).get("output")).get("text")
+    commit_msg = json.loads(run(["termux-dialog","-t","'COMMIT MESSAGE'", "-i","'TYPE 👉:stop TO PAUSE'"]).get("output")).get("text")
+    if ":" and "stop" in commit_msg:
+      help_toast()
+      while True:
+        wait()
+        start = start_in_clipboard()
+        if start:
+          #reset
+          commit_msg = ""
+          timer = timer - timer - 19
+          break
+      
     is_commit = commit_msg.split()
     if is_commit:
       cmd1 = ["git","add","."]
@@ -66,24 +90,10 @@ def push():
       for cmd in cmd_sequence:
         run(cmd)
       return True
-    tries += 20
-    wait(tries)
-
-def port_forward():
-  port = 5173
-  print(CLEARLINE,GREEN(f"{spin[counter]} SETTING PORT {port} PUBLIC {spin[counter]}"), end="\n\n")
-  update_counter()
-  
-  command_sequence = [
-    ["timeout", "2", "gh", "cs", "ports", "forward", f"{port}:{port}","-c",f"{'$CODESPACE_NAME'}"],
-    ["gh", "cs", "ports", "forward", f"{port}:{port}",f"{'$CODESPACE_NAME'}&"],
-    ["gh", "cs", "ports", "visibility", f"{port}:public"]
-  ]
-  for cmd in command_sequence:
-    run(cmd,codespace=True,show=True)
-    print("\n",CLEARLINE,"=" * style.width)
-  print("\n\n")
-  
+    timer += 20
+    if timer > 300:
+      timer = 300
+    wait(timer)
 
 def keep_pulling():
   cmd = ["git","pull"]
@@ -119,7 +129,6 @@ def main():
   is_codespace = check_environment()
   if is_codespace:
     animation("CODESPACE")
-    port_forward()
     keep_pulling()
   else:
     animation("LOCAL")    
