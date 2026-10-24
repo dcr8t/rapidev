@@ -18,6 +18,20 @@ def update_counter():
   else:
     counter += 1
 
+def start_in_clipboard():
+  cmd = ["termux-clipboard-get"]
+  reset_cmd = ["termux-clipboard-set",""]
+  result = run(cmd).get("output")
+  if "start" and ":" in result:
+    run(reset_cmd)
+    return True
+  else:
+    return False
+
+def help_toast():
+  cmd = ["termux-toast","COPY 👉start: TO CLIPBOARD TO START RAPIDEV"]
+  run(cmd)
+
 def run(command,show=False,codespace=False):
   now = datetime.now().strftime("___%H:%M:%S   %d/%m/%Y")
   try:
@@ -53,34 +67,47 @@ def scan_for_changes():
 def push():
   print(CLEARLINE,GREEN(f"{spin[counter]} PUSHING TO GITHUB {spin[counter]}"), end="\r")
   update_counter()
-  tries = 0
+  timer = 0
   while True:
-    commit_msg = json.loads(run(["termux-dialog","-t","'COMMIT MESSAGE'"])).get("text")
+    commit_msg = json.loads(run(["termux-dialog","-t","'COMMIT MESSAGE'", "-i","'TYPE 👉stop: TO PAUSE'"]).get("output")).get("text")
+    if "stop" and ":" in commit_msg:
+      help_toast()
+      while True:
+        wait()
+        start = start_in_clipboard()
+        if start:
+          #reset
+          commit_msg = ""
+          timer = timer - timer - 19
+          break
+      
     is_commit = commit_msg.split()
     if is_commit:
       cmd1 = ["git","add","."]
       cmd2 = ["git","commit","-m",commit_msg]
-      cmd3 = ["git","push","-u","origin","main"]
+      cmd3 = ["git","push","-u","origin","main","-f"]
       cmd_sequence = [cmd1,cmd2,cmd3]
       for cmd in cmd_sequence:
         run(cmd)
       return True
-    tries += 20
-    wait(tries)
+    timer += 20
+    if timer > 300:
+      timer = 300
+    wait(timer)
 
 def keep_pulling():
   cmd = ["git","pull"]
-  fix_cmd = ["git","restore",".","&&","git","clean","-fd"]
+  fix_cmds = [["git","restore","."],["git","clean","-fd"]]
   while True:
     pull = run(cmd,show=True,codespace=True)
-    if pull.get("code") != 0:
-      print("[!]",RED("ERROR PULLING!"))
+    status_code = pull.get("code")
+    if status_code != 0:
+      print("[!]",RED("ERROR PULLING!"),"Code:",status_code)
       print("[?]",YELLOW("Caused by untracked or uncommited files in Working directory..."))
       print("[*]",GREEN("FIXING"))
-      run(fix_cmd)
+      for fix_cmd in fix_cmds:
+        run(fix_cmd)
       print("[✔]",GREEN("FIXED!"))
-      
-    
     wait()
     
 def check_environment():
@@ -116,6 +143,6 @@ try:
   with style.hidden_cursor():
     main()
 
-except:
+except KeyboardInterrupt:
   print("\r",CLEARLINE,BLUE("BYE! HAVE A GREAT DAY"))
   print("\033[?25h")
