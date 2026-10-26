@@ -30,8 +30,9 @@ def start_in_clipboard():
     return False
 
 def toast(text: str):
-  cmd = ["termux-toast",text]
+  cmd = ["termux-toast","-g","top","-c","yellow","-b","'#FF121214'",text]
   run(cmd)
+  wait()
 
 def run(command,show=False,codespace=False):
   now = datetime.now().strftime("___%H:%M:%S   %d/%m/%Y")
@@ -87,12 +88,16 @@ def push():
       cmd1 = ["git","add","."]
       cmd2 = ["git","commit","-m",commit_msg]
       cmd3 = ["git","push","-u","origin","main","-f"]
+      reset_cmd = ["git", "reset", "--soft", "HEAD^"
+]
       cmd_sequence = [cmd1,cmd2,cmd3]
       for cmd in cmd_sequence:
         result = run(cmd)
         status_code = result.get("code")
         if status_code != 0:
           toast("😟:PUSH FAILED! Check your Internet Connection and Try Again...")
+          if cmd == cmd_sequence[2]:
+            run(reset_cmd)
           return False
         else:
           toast(result.get("output"))
