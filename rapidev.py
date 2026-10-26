@@ -96,6 +96,7 @@ def push():
         status_code = result.get("code")
         if status_code != 0:
           toast("😟:PUSH FAILED! Check your Internet Connection and Try Again...")
+          toast(result.get("output"))
           if cmd == cmd_sequence[2]:
             run(reset_cmd)
           return False
