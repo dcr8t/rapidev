@@ -30,7 +30,7 @@ def start_in_clipboard():
     return False
 
 def toast(text: str):
-  cmd = ["termux-toast","-g","top","-c","yellow","-b",'"#FF121214"',text]
+  cmd = ["termux-toast","-g","top","-c","yellow","-b","#FF121214",text]
   run(cmd)
   wait()
 
