@@ -29,8 +29,8 @@ def start_in_clipboard():
   else:
     return False
 
-def help_toast():
-  cmd = ["termux-toast","COPY 👉start: TO CLIPBOARD TO START RAPIDEV"]
+def toast(text: str):
+  cmd = ["termux-toast",text]
   run(cmd)
 
 def run(command,show=False,codespace=False):
@@ -72,7 +72,7 @@ def push():
   while True:
     commit_msg = json.loads(run(["termux-dialog","-t","'COMMIT MESSAGE'", "-i","'TYPE 👉stop: TO PAUSE'"]).get("output")).get("text")
     if "stop" and ":" in commit_msg:
-      help_toast()
+      toast("COPY 👉start: TO CLIPBOARD TO START RAPIDEV")
       while True:
         wait()
         start = start_in_clipboard()
@@ -89,7 +89,10 @@ def push():
       cmd3 = ["git","push","-u","origin","main","-f"]
       cmd_sequence = [cmd1,cmd2,cmd3]
       for cmd in cmd_sequence:
-        run(cmd)
+        status_code = run(cmd).get("code")
+        if status_code != 0:
+          toast("😟:PUSH FAILED! Check your Internet Connection and Try Again...")
+          return False
       return True
     timer += 20
     if timer > 300:
@@ -141,7 +144,10 @@ def main():
     while True:
       is_changed = scan_for_changes()
       if is_changed:
-        push()
+        while True:
+          pushed = push()
+          if pushed:
+            break
       else:
         wait()
 
@@ -152,3 +158,4 @@ try:
 except KeyboardInterrupt:
   print("\r",CLEARLINE,BLUE("BYE! HAVE A GREAT DAY"))
   print("\033[?25h")
+  exit()
