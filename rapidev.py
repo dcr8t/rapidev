@@ -89,10 +89,13 @@ def push():
       cmd3 = ["git","push","-u","origin","main","-f"]
       cmd_sequence = [cmd1,cmd2,cmd3]
       for cmd in cmd_sequence:
-        status_code = run(cmd).get("code")
+        result = run(cmd)
+        status_code = result.get("code")
         if status_code != 0:
           toast("😟:PUSH FAILED! Check your Internet Connection and Try Again...")
           return False
+        else:
+          toast(result.get("output"))
       return True
     timer += 20
     if timer > 300:
