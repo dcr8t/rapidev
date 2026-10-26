@@ -17,7 +17,7 @@ def port_forward():
   try:
     port = sys.argv[1]
     #default
-    if port == "d":
+    if port == "-d":
       port = 5173
 
   except:
