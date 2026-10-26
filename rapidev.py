@@ -93,7 +93,12 @@ def push():
     timer += 20
     if timer > 300:
       timer = 300
-    wait(timer)
+    #checking for start while waiting
+    for i in range(timer):
+      is_start = start_in_clipboard()
+      if is_start:
+        break
+      wait()
 
 def keep_pulling():
   cmd = ["git","pull"]
