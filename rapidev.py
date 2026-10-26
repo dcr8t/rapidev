@@ -166,4 +166,4 @@ try:
 except KeyboardInterrupt:
   print("\r",CLEARLINE,BLUE("BYE! HAVE A GREAT DAY"))
   print("\033[?25h")
-  exit()
+  sys.exit()
