@@ -1,3 +1,4 @@
+#!/data/data/com.termux/files/usr/bin/python
 import os, subprocess, time,json,sys
 from datetime import datetime
 from blessed import Terminal
