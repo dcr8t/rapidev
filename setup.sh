@@ -1,2 +1,2 @@
-#!bin/bash
-cp rapidev.py "$PREFIX/bin/rapidev" && chmod +x "$PREFIX/bin/rapidev" && echo -e "Setup Complete!\nrun command: rapidev"
+#!usr/bin/env bash
+cp rapidev.py "$PREFIX/bin/rapidev" && cp portward.py "$PREFIX/bin/portward" && echo -e "Setup Complete!\nrun command:\n[1]: rapidev to run remote git pulling only\n[2]: add -d flag to forward DEFAULT PORT 5173 and Start Server or specify CUSTOM PORT\n e.g rapidev 5174\n\n[3]: run portward {port} to forward seperately\n e.g portward 5174\nIf none specified the default port is 5173"

@@ -1,5 +1,6 @@
-#!/data/data/com.termux/files/usr/bin/python
+#!/usr/bin/env python
 import os, subprocess, time,json,sys
+from threading import Thread
 from datetime import datetime
 from blessed import Terminal
 style = Terminal()
@@ -11,6 +12,19 @@ YELLOW = style.bold_yellow
 CLEARLINE = style.clear_eol
 counter = 0
 spin = ["|","/","-","\\"]
+
+def port_forward():
+  try:
+    port = sys.argv[1]
+    #default
+    if port == "d":
+      port = 5173
+
+  except:
+    return
+  cmd = ["portward",f"{port}"]
+  run(cmd, codespace=True)
+    
 
 def update_counter():
   global counter
@@ -117,7 +131,7 @@ def keep_pulling():
   cmd = ["git","pull"]
   fix_cmds = [["git","restore","."],["git","clean","-fd"]]
   while True:
-    pull = run(cmd,show=True,codespace=True)
+    pull = run(cmd,show=True, codespace=True)
     status_code = pull.get("code")
     if status_code != 0:
       print("[!]",RED("ERROR PULLING!"),"Code:",status_code)
@@ -147,6 +161,8 @@ def main():
   is_codespace = check_environment()
   if is_codespace:
     animation("CODESPACE")
+    server = Thread(target=port_forward)
+    server.start()
     keep_pulling()
   else:
     animation("LOCAL")    
