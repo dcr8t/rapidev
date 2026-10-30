@@ -46,7 +46,7 @@ def start_in_clipboard():
 def toast(text: str):
   cmd = ["termux-toast","-g","top","-c","yellow","-b","#FF121214",text]
   run(cmd)
-  wait()
+  wait(n=1)
 
 def run(command,show=False,codespace=False):
   now = datetime.now().strftime("___%H:%M:%S   %d/%m/%Y")
