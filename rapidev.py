@@ -162,7 +162,10 @@ def main():
   if is_codespace:
     animation("CODESPACE")
     server = Thread(target=port_forward)
-    server.start()
+    try:
+      server.start()
+    except KeyboardInterrupt:
+      return
     keep_pulling()
   else:
     animation("LOCAL")    
