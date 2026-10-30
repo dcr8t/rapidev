@@ -101,7 +101,7 @@ def push():
     if is_commit:
       cmd1 = ["git","add","."]
       cmd2 = ["git","commit","-m",commit_msg]
-      cmd3 = ["git","push","-u","origin","main","-f"]
+      cmd3 = ["git","push","-u","origin","HEAD"]
       reset_cmd = ["git", "reset", "--soft", "HEAD^"
 ]
       cmd_sequence = [cmd1,cmd2,cmd3]
@@ -109,8 +109,8 @@ def push():
         result = run(cmd)
         status_code = result.get("code")
         if status_code != 0:
-          toast("😟:PUSH FAILED! Check your Internet Connection and Try Again...")
           toast(result.get("output"))
+          toast("😟:PUSH FAILED! Check your Internet Connection and Try Again...")
           if cmd == cmd_sequence[2]:
             run(reset_cmd)
           return False
@@ -128,7 +128,7 @@ def push():
       wait()
 
 def keep_pulling():
-  cmd = ["git","pull"]
+  cmd = ["git","pull","origin","HEAD"]
   fix_cmds = [["git","restore","."],["git","clean","-fd"]]
   while True:
     pull = run(cmd,show=True, codespace=True)
